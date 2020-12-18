@@ -1,23 +1,33 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
+import User from './components/User/User';
 
 function App() {
+  const [users, setUsers] = useState([]);
+  const [team, setTeam] = useState([]);
+
+  useEffect( () => {
+    fetch('https://randomuser.me/api/?results=15')
+    .then(res => res.json())
+    .then(data => setUsers(data.results))
+  }, [])
+
+  const addMember = (fullName) => {
+    setTeam([...team, fullName]);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Team builder</h1>
+      <ul>
+        {
+          team.map(member => <h2>{member}</h2>)
+        }
+      </ul>
+
+      {
+        users.map(user => <User user={user} addMember={addMember}></User>)
+      }
     </div>
   );
 }
